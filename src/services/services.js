@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === "development") {
   baseurl = "/travelapi/";
 }
 
+
 const apiClient = axios.create({
   baseURL: baseurl,
   headers: {
