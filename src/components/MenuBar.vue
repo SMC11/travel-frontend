@@ -7,7 +7,7 @@ import UserServices from "../services/UserServices";
 const router = useRouter();
 
 const user = ref(null);
-const title = ref("Itineraries");
+const title = ref("Travel Itinerary");
 const logoURL = ref("");
 
 onMounted(() => {

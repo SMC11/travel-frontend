@@ -89,12 +89,12 @@ function closeSnackBar() {
       <v-row align="center" class="mb-4">
         <v-col cols="10"
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
-            >Recipes
+            >Itineraries
           </v-card-title>
         </v-col>
         <v-col class="d-flex justify-end" cols="2">
           <v-btn v-if="user !== null" color="accent" @click="openAdd()"
-            >Add</v-btn
+            >Create Itinerary</v-btn
           >
         </v-col>
       </v-row>
