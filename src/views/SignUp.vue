@@ -15,6 +15,7 @@ const snackbar = ref({
 const user = ref({
   firstName: "",
   lastName: "",
+  phoneNumber: "",
   email: "",
   password: "",
 });
