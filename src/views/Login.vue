@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
 import UserServices from "../services/UserServices.js";
+import Login from "../services/login.js";
 
 const router = useRouter();
 const isCreateAccount = ref(false);
@@ -22,6 +23,7 @@ onMounted(async () => {
   if (localStorage.getItem("user") !== null) {
     router.push({ name: "home" });
   }
+  Login.data();
 });
 
 function navigateToHome() {
@@ -63,11 +65,10 @@ async function login() {
 }
 
 function openCreateAccount() {
-  isCreateAccount.value = true;
+  router.push({ name: "signup" });
 }
 
 function closeCreateAccount() {
-  isCreateAccount.value = false;
 }
 
 function closeSnackBar() {
@@ -87,10 +88,13 @@ function closeSnackBar() {
             required
           ></v-text-field>
 
-          <v-text-field
+           <v-text-field
             v-model="user.password"
             label="Password"
-            required
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show1 ? 'text' : 'password'"
+            counter
+            @click:append="show1 = !show1"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -111,7 +115,7 @@ function closeSnackBar() {
             color="secondary"
             @click="navigateToHome()"
           >
-            View Itineraries
+            View Published Itineraries
           </v-btn>
         </v-card-title>
       </v-card>
