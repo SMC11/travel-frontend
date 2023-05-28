@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted } from "vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import RecipeCard from "../components/RecipeCardComponent.vue";
 import RecipeServices from "../services/RecipeServices.js";
 
+const router = useRouter();
 const recipes = ref([]);
 const isAdd = ref(false);
 const user = ref(null);
@@ -21,8 +23,12 @@ const newRecipe = ref({
 });
 
 onMounted(async () => {
-  await getRecipes();
   user.value = JSON.parse(localStorage.getItem("user"));
+  console.log(user.value);
+  if(user.value === null){
+    router.push({ name: "login" });
+  }
+    await getRecipes();
 });
 
 async function getRecipes() {
