@@ -55,6 +55,7 @@ async function updateItinerary() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = `${itinerary.value.name} updated successfully!`;
+      setTimeout(()=> {router.push({ name: "home" });}, 5000);
     })
     .catch((error) => {
       console.log(error);
@@ -71,6 +72,7 @@ async function addItinerary() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = `${itinerary.value.name} created successfully!`;
+      setTimeout(()=> {router.push({ name: "home" });}, 5000);
     }
   )
   .catch((error) => {
@@ -79,9 +81,11 @@ async function addItinerary() {
     snackbar.value.color = "error";
     snackbar.value.text = error.response.data.message;
   });
-  router.push({ name: "home" });
 }
 
+function closeSnackBar() {
+  snackbar.value.value = false;
+}
 
 </script>
 
