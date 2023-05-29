@@ -19,6 +19,16 @@ const router = createRouter({
       component: () => import("./views/Home.vue"),
     },
     {
+      path: "/createitinerary",
+      name: "createitinerary",
+      component: () => import("./views/CreateItinerary.vue"),
+    },
+    {
+      path: "/edititinerary/:id",
+      name: "edititinerary",
+      component: () => import("./views/EditItinerary.vue"),
+    },
+    {
       path: "/recipe/:id",
       name: "editRecipe",
       props: true,
