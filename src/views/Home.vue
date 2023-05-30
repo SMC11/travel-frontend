@@ -25,13 +25,20 @@ const newItinerary = ref({
 });
 
 onMounted(async () => {
+  mounted();
+});
+
+async function mounted(){
+  itinerariesList[0].value = [];
+  itinerariesList[1].value = [];
+  itinerariesList[2].value = [];
   await getItineraries();
   user.value = JSON.parse(localStorage.getItem("user"));
   // console.log(user.value);
   if(user.value === null){
     router.push({ name: "login" });
   }
-});
+}
 
 async function getItineraries() {
   user.value = JSON.parse(localStorage.getItem("user"));
@@ -69,6 +76,23 @@ async function getItineraries() {
 }
 
 
+async function deleteItinerary(itineraryId) {
+  await ItineraryServices.deleteItinerary(itineraryId)
+  .then((response) => {
+      snackbar.value.value = true;
+      snackbar.value.color = "green";
+      snackbar.value.text = response.data.message;
+      mounted();
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.response.data.message;
+    });
+}
+
+
 function openAdd() {
   router.push({ name: "createitinerary" });
 }
@@ -80,6 +104,7 @@ function closeAdd() {
 function closeSnackBar() {
   snackbar.value.value = false;
 }
+
 </script>
 
 <template>
@@ -103,7 +128,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[0].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @deletedList="getLists()"
+        @delete-itinerary="deleteItinerary"
       />
     </v-col>
     
@@ -112,7 +137,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[1].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @deletedList="getLists()"
+        @delete-itinerary="deleteItinerary"
       />
     </v-col>
     
@@ -121,7 +146,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[2].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @deletedList="getLists()"
+        @delete-itinerary="deleteItinerary"
       />
     </v-col>
     </v-row>

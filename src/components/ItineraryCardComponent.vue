@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import RecipeIngredientServices from "../services/RecipeIngredientServices.js";
 import RecipeStepServices from "../services/RecipeStepServices";
+import ItineraryServices from "../services/ItineraryServices.js";
 
 const router = useRouter();
 
@@ -10,6 +11,12 @@ const showDetails = ref(false);
 const recipeIngredients = ref([]);
 const recipeSteps = ref([]);
 const user = ref(null);
+
+const snackbar = ref({
+  value: false,
+  color: "",
+  text: "",
+});
 
 const props = defineProps({
   itinerary: {
@@ -65,9 +72,17 @@ async function getRecipeSteps() {
     });
 }
 
+const emit = defineEmits(["delete-itinerary"]);
+
+const handleDelete = (itineraryId) => {
+  console.log(itineraryId);
+  emit("delete-itinerary", itineraryId);
+};
+
 function navigateToEdit() {
   router.push({ name: "edititinerary", params: { id: props.itinerary.id } });
 }
+
 </script>
 
 <template>
@@ -85,6 +100,12 @@ function navigateToEdit() {
           </v-chip>
         </v-col>
         <v-col class="d-flex justify-end">
+          <v-icon
+            v-if="user !== null"
+            size="small"
+            icon="mdi-delete"
+            @click="handleDelete(itinerary.id)"
+          ></v-icon>
           <v-icon
             v-if="user !== null"
             size="small"
