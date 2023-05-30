@@ -26,6 +26,6 @@ export default {
     return apiClient.put("itineraries/" + itineraryId, itinerary);
   },
   deleteItinerary(itineraryId) {
-    return apiClient.delete("recitinerariesipes/" + itineraryId);
+    return apiClient.delete("itineraries/" + itineraryId);
   },
 };
