@@ -79,7 +79,7 @@ async function addItinerary() {
     snackbar.value.color = "error";
     snackbar.value.text = error.response.data.message;
   });
-  router.push({ name: "home" });
+  setTimeout(()=> {router.push({ name: "home" });}, 5000);
 }
 
 
