@@ -13,11 +13,11 @@ const snackbar = ref({
   text: "",
 });
 const user = ref({
-  firstName: "",
-  lastName: "",
-  phoneNumber: "",
-  email: "",
-  password: "",
+  firstName: undefined,
+  lastName: undefined,
+  phoneNumber: undefined,
+  email: undefined,
+  password: undefined,
 });
 
 onMounted(async () => {
@@ -37,14 +37,14 @@ async function createAccount() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = "Account created successfully!";
-      router.push({ name: "login" });
+      setTimeout(()=> {router.push({ name: "login" });}, 5000);
     })
     .catch((error) => {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
       snackbar.value.text = error.response.data.message;
-    });
+    });    
 }
 
 async function login() {

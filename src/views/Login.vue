@@ -54,7 +54,7 @@ async function login() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = "Login successful!";
-      router.push({ name: "home" });
+      setTimeout(()=> {router.push({ name: "home" });}, 5000);
     })
     .catch((error) => {
       console.log(error);

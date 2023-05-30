@@ -31,7 +31,7 @@ function logout() {
 
 <template>
   <div>
-    <v-app-bar color="primary" location="bottom" app dark>
+    <v-app-bar color="primary" location="top" app dark>
       <router-link :to="{ name: 'home' }">
         <v-img
           class="mx-2"
@@ -41,7 +41,7 @@ function logout() {
           contain
         ></v-img>
       </router-link>
-      <v-toolbar-title class="title">
+      <v-toolbar-title class="title text-right" >
         {{ title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>

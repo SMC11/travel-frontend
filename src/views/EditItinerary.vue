@@ -91,6 +91,8 @@ function closeSnackBar() {
 
 <template>
   <v-container>
+    <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'home' }"> Back </v-btn>
+    <br><br>
     <v-row align="center">
       <v-col cols="10"
         ><v-card-title class="pl-0 text-h4 font-weight-bold"
