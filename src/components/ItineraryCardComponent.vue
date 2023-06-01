@@ -8,6 +8,7 @@ const showDetails = ref(false);
 const recipeIngredients = ref([]);
 const recipeSteps = ref([]);
 const user = ref(null);
+const role = ref(0);
 
 const snackbar = ref({
   value: false,
@@ -23,6 +24,7 @@ const props = defineProps({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
+  role.value = user.value.role;
 });
 
 function getItineraryDurationType(durationType) {
@@ -71,13 +73,13 @@ function navigateToEdit() {
         </v-col>
         <v-col class="d-flex justify-end">
           <v-icon
-            v-if="user !== null"
+            v-if="user !== null && role > 0"
             size="small"
             icon="mdi-delete"
             @click="handleDelete(itinerary.id)"
           ></v-icon>
           <v-icon
-            v-if="user !== null"
+            v-if="user !== null && role > 0"
             size="small"
             icon="mdi-pencil"
             @click="navigateToEdit()"
