@@ -94,6 +94,9 @@ function openAdd() {
 function viewHotels() {
   router.push({ name: "viewhotels" });
 }
+function viewSites() {
+  router.push({ name: "viewsites" });
+}
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -105,7 +108,7 @@ function closeSnackBar() {
   <v-container>
     <div id="body">
       <v-row align="center" class="mb-4">
-        <v-col cols="8"
+        <v-col cols="6"
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
             >Itineraries For Destinations
           </v-card-title>
@@ -118,6 +121,11 @@ function closeSnackBar() {
         <v-col class="d-flex justify-end" cols="2">
           <v-btn v-if="user !== null && role > 0" color="accent" @click="viewHotels()"
             >View Hotels</v-btn
+          >
+        </v-col>
+        <v-col class="d-flex justify-end" cols="2">
+          <v-btn v-if="user !== null && role > 0" color="accent" @click="viewSites()"
+            >View Sites</v-btn
           >
         </v-col>
       </v-row>
