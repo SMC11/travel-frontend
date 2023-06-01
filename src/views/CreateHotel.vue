@@ -19,13 +19,10 @@ const snackbar = ref({
 
 onMounted(async () => {
   const user = localStorage.getItem("user");
-  console.log(JSON.parse(user).id);
-  user.value = JSON.parse(localStorage.getItem("user"));
-  // console.log(user.value);
-  if(user.value === null){
+  if(user === null){
     router.push({ name: "login" });
   }
-  if(user.value.role < 1){
+  if(JSON.parse(user).role < 1){
     router.push({ name: "home" });
   }
   console.log(hotel.value);

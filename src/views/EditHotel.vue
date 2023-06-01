@@ -24,9 +24,7 @@ const snackbar = ref({
 
 onMounted(async () => {
   const user = localStorage.getItem("user");
-  console.log(JSON.parse(user).id);
-    
-  await getHotel();
+    await getHotel();
   // await getHotelDays();
   // await getHotelDaySites();
   // await getHotelDayHotel();
