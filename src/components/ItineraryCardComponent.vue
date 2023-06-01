@@ -22,8 +22,6 @@ const props = defineProps({
 });
 
 onMounted(async () => {
-  await getRecipeIngredients();
-  await getRecipeSteps();
   user.value = JSON.parse(localStorage.getItem("user"));
 });
 
