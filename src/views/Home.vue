@@ -37,7 +37,7 @@ async function mounted(){
 async function getItineraries() {
   user.value = JSON.parse(localStorage.getItem("user"));
   if (user.value !== null && user.value.id !== null) {
-    await ItineraryServices.getItinerariesByUserId(user.value.id)
+    await ItineraryServices.getItineraries()
       .then((response) => {
         itineraries.value = response.data;
         for(let i = 0; i < response.data.length; i++){
@@ -91,6 +91,10 @@ function openAdd() {
   router.push({ name: "createitinerary" });
 }
 
+function viewHotels() {
+  router.push({ name: "viewhotels" });
+}
+
 function closeSnackBar() {
   snackbar.value.value = false;
 }
@@ -101,7 +105,7 @@ function closeSnackBar() {
   <v-container>
     <div id="body">
       <v-row align="center" class="mb-4">
-        <v-col cols="10"
+        <v-col cols="8"
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
             >Itineraries For Destinations
           </v-card-title>
@@ -109,6 +113,11 @@ function closeSnackBar() {
         <v-col class="d-flex justify-end" cols="2">
           <v-btn v-if="user !== null && role > 0" color="accent" @click="openAdd()"
             >Create Itinerary</v-btn
+          >
+        </v-col>
+        <v-col class="d-flex justify-end" cols="2">
+          <v-btn v-if="user !== null && role > 0" color="accent" @click="viewHotels()"
+            >View Hotels</v-btn
           >
         </v-col>
       </v-row>

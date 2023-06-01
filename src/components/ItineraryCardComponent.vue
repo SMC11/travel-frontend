@@ -1,9 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import RecipeIngredientServices from "../services/RecipeIngredientServices.js";
-import RecipeStepServices from "../services/RecipeStepServices";
-import ItineraryServices from "../services/ItineraryServices.js";
 
 const router = useRouter();
 
@@ -45,31 +42,6 @@ function getItineraryDurationType(durationType) {
 
 function getDescription(desc) {
   return (desc.length > 100) ? desc.slice(0, 100-1) + '...' : desc;
-}
-
-function onCreateItinerary() {
-  router.push({name: "home"});
-}
-async function getRecipeIngredients() {
-  await RecipeIngredientServices.getRecipeIngredientsForRecipe(props.itinerary.id)
-    .then((response) => {
-      recipeIngredients.value = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-async function getRecipeSteps() {
-  await RecipeStepServices.getRecipeStepsForRecipeWithIngredients(
-    props.itinerary.id
-  )
-    .then((response) => {
-      recipeSteps.value = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 }
 
 const emit = defineEmits(["delete-itinerary"]);
