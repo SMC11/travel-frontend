@@ -9,19 +9,12 @@ const router = useRouter();
 const itineraries = ref([]);
 const itinerariesList = [ref([]), ref([]), ref([])];
 
-const isAdd = ref(false);
+const role = ref(0);
 const user = ref(null);
 const snackbar = ref({
   value: false,
   color: "",
   text: "",
-});
-const newItinerary = ref({
-  name: "",
-  description: "",
-  servings: 0,
-  time: "30",
-  isPublished: false,
 });
 
 onMounted(async () => {
@@ -34,6 +27,7 @@ async function mounted(){
   itinerariesList[2].value = [];
   await getItineraries();
   user.value = JSON.parse(localStorage.getItem("user"));
+  role.value = user.value.role;
   // console.log(user.value);
   if(user.value === null){
     router.push({ name: "login" });
@@ -97,10 +91,6 @@ function openAdd() {
   router.push({ name: "createitinerary" });
 }
 
-function closeAdd() {
-//  isAdd.value = false;
-}
-
 function closeSnackBar() {
   snackbar.value.value = false;
 }
@@ -117,7 +107,7 @@ function closeSnackBar() {
           </v-card-title>
         </v-col>
         <v-col class="d-flex justify-end" cols="2">
-          <v-btn v-if="user !== null" color="accent" @click="openAdd()"
+          <v-btn v-if="user !== null && role > 0" color="accent" @click="openAdd()"
             >Create Itinerary</v-btn
           >
         </v-col>
@@ -156,7 +146,7 @@ function closeSnackBar() {
           >
         </v-col>
         <v-col class="d-flex justify-end" cols="2">
-          <v-btn v-if="user !== null" color="accent" @click="openAdd()"
+          <v-btn v-if="user !== null && role > 0" color="accent" @click="openAdd()"
             >Create Itinerary</v-btn
           >
         </v-col>
