@@ -24,9 +24,24 @@ const router = createRouter({
       component: () => import("./views/CreateItinerary.vue"),
     },
     {
+      path: "/createhotel",
+      name: "createhotel",
+      component: () => import("./views/CreateHotel.vue"),
+    },
+    {
       path: "/edititinerary/:id",
       name: "edititinerary",
       component: () => import("./views/EditItinerary.vue"),
+    },
+    {
+      path: "/edithotel/:id",
+      name: "edithotel",
+      component: () => import("./views/EditHotel.vue"),
+    },
+    {
+      path: "/viewhotels",
+      name: "viewhotels",
+      component: () => import("./views/ViewHotels.vue"),
     },
     {
       path: "/recipe/:id",
