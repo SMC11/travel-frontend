@@ -44,15 +44,19 @@ const router = createRouter({
       component: () => import("./views/ViewHotels.vue"),
     },
     {
-      path: "/recipe/:id",
-      name: "editRecipe",
-      props: true,
-      component: () => import("./views/EditRecipe.vue"),
+      path: "/createsite",
+      name: "createsite",
+      component: () => import("./views/CreateSite.vue"),
     },
     {
-      path: "/ingredients",
-      name: "ingredients",
-      component: () => import("./views/IngredientList.vue"),
+      path: "/editsite/:id",
+      name: "editsite",
+      component: () => import("./views/EditSite.vue"),
+    },
+    {
+      path: "/viewsites",
+      name: "viewsites",
+      component: () => import("./views/ViewSites.vue"),
     },
   ],
 });
