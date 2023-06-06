@@ -12,7 +12,6 @@ const router = useRouter();
 var site = ref({});
 let isAddSite = ref(false);
 let isEditSite = ref(true);
-const site = ref([]);
 
 const snackbar = ref({
   value: false,
