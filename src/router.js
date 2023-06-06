@@ -34,6 +34,11 @@ const router = createRouter({
       component: () => import("./views/EditItinerary.vue"),
     },
     {
+      path: "/addItineraryDay/:id",
+      name: "addItineraryDay",
+      component: () => import("./views/AddItineraryDay.vue"),
+    },
+    {
       path: "/edithotel/:id",
       name: "edithotel",
       component: () => import("./views/EditHotel.vue"),
