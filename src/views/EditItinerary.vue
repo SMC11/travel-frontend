@@ -1,13 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import IngredientServices from "../services/IngredientServices.js";
-import RecipeIngredientServices from "../services/RecipeIngredientServices";
-import RecipeStepServices from "../services/RecipeStepServices";
 import ItineraryServices from "../services/ItineraryServices";
 
 const route = useRoute();
 const router = useRouter();
+const role = ref(0);
+const user = ref(null);
 
 var itinerary = ref({});
 let isAddItinerary = ref(false);
@@ -24,8 +23,7 @@ const snackbar = ref({
 
 
 onMounted(async () => {
-  const user = localStorage.getItem("user");
-  console.log(JSON.parse(user).id);
+  user.value = JSON.parse(localStorage.getItem("user"));
     
   await getItinerary();
   // await getItineraryDays();
@@ -33,7 +31,7 @@ onMounted(async () => {
   // await getItineraryDayHotel();
   // console.log(itinerary);
   if (user !== null) {
-    itinerary.value.userId = JSON.parse(user).id;
+    itinerary.value.userId = user.id;
   }
   console.log(itinerary.value);
 });
@@ -46,6 +44,10 @@ async function getItinerary() {
     .catch((error) => {
       console.log(error);
     });
+}
+
+function addItineraryDay(){
+  router.push({ name: "addItineraryDay" });
 }
 
 async function updateItinerary() {
@@ -90,7 +92,7 @@ function closeSnackBar() {
 
 <template>
   <v-container>
-    <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'home' }"> Back </v-btn>
+    <v-btn v-if="user !== null" class="mx-2" @click="router.go(-1)"> Back </v-btn>
     <br><br>
     <v-row align="center">
       <v-col cols="10"
@@ -151,7 +153,11 @@ function closeSnackBar() {
                 : ""
             }}
             </v-btn>
-            
+            <v-btn 
+            variant="flat" color="primary"
+            @click="addItineraryDay()"
+             >Add Day To Itinerary
+            </v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-form>
