@@ -37,6 +37,7 @@ async function mounted(){
   await getSubscriptions();
   if (user !== null) {
     itinerary.value.userId = user.id;
+    role.value = user.role;
     if(user.role > 0){
       readOnly.value = false;
     }
@@ -158,6 +159,7 @@ function closeSnackBar() {
           <v-card-actions class="pt-0">
             
             <v-btn 
+            v-if="role == 0"
             variant="flat" color="primary"
             @click="
               isSubscribed
