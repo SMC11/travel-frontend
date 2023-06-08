@@ -28,6 +28,9 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
+  if(user.value === null){
+    router.push({ name: "login" });
+  }
   mounted();
 });
 
@@ -35,7 +38,7 @@ async function mounted(){
   await getItinerary();
   if (user !== null) {
     itinerary.value.userId = user.id;
-    if(user.role > 0){
+    if(user.value.role > 0){
       readOnly.value = false;
     }
   }
@@ -158,7 +161,7 @@ function closeSnackBar() {
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12">
               <ItineraryDayCard
                 v-for="itineraryDay in itineraryDays"
                 :key="itineraryDay.id"
@@ -166,7 +169,6 @@ function closeSnackBar() {
                 @delete-itinerary-day="deleteItineraryDay"
               />
               </v-col>
-              <v-col cols="6"></v-col>
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">

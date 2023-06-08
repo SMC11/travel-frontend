@@ -31,7 +31,9 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
-
+  if(user.value === null){
+    router.push({ name: "login" });
+  }
   await getItinerary();
   await getItineraryDay();
   await getSites();
@@ -39,6 +41,7 @@ onMounted(async () => {
   if (user !== null) {
     itinerary.value.userId = user.id;
   }
+  
 });
 
 async function getItinerary() {

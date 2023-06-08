@@ -32,10 +32,7 @@ async function mounted(){
   await getItineraries();
   user.value = JSON.parse(localStorage.getItem("user"));
   role.value = user.value.role;
-  // console.log(user.value);
-  if(user.value === null){
-    router.push({ name: "login" });
-  }
+  
 }
 
 async function getItineraries() {
@@ -106,6 +103,14 @@ async function deleteItinerary(itineraryId) {
 }
 
 function navigateToItinerary(itineraryId) {
+  console.log(user.value);
+  if(user.value === null){
+    return;
+  }
+  if(role.value>0){
+    router.push({ name: "edititinerary", params: {id: itineraryId} });
+    return;
+  }
   router.push({ name: "itinerary", params: {id: itineraryId} });
 }
 

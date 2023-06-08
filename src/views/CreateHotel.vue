@@ -25,7 +25,6 @@ onMounted(async () => {
   if(JSON.parse(user).role < 1){
     router.push({ name: "home" });
   }
-  console.log(hotel.value);
 });
 
 async function getHotel() {

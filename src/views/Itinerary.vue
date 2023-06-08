@@ -9,7 +9,7 @@ import UserServices from "../services/UserServices";
 
 const route = useRoute();
 const router = useRouter();
-const role = ref(0);
+const role = ref(undefined);
 const user = ref(null);
 const readOnly = ref(true);
 
@@ -29,6 +29,10 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  if(user.value === null){
+    router.push({ name: "login" });
+  }
   mounted();
 });
 
@@ -38,7 +42,7 @@ async function mounted(){
   if (user !== null) {
     itinerary.value.userId = user.id;
     role.value = user.value.role;
-    if(user.role > 0){
+    if(user.value.role > 0){
       readOnly.value = false;
     }
   }
@@ -147,7 +151,7 @@ function closeSnackBar() {
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12">
               <ItineraryDayCard
         v-for="itineraryDay in itineraryDays"
         :key="itineraryDay.id"
@@ -155,7 +159,6 @@ function closeSnackBar() {
         @delete-itinerary-day="deleteItineraryDay"
       />
               </v-col>
-              <v-col cols="6"></v-col>
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">

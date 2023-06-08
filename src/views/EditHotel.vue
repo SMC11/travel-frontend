@@ -25,6 +25,9 @@ const snackbar = ref({
 
 onMounted(async () => {
   const user = localStorage.getItem("user");
+  if(user === null){
+    router.push({ name: "login" });
+  }
     await getHotel();
   // await getHotelDays();
   // await getHotelDaySites();
