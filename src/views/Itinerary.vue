@@ -42,6 +42,7 @@ async function mounted(){
       readOnly.value = false;
     }
   }
+  console.log(readOnly);
 }
 
 async function getSubscriptions() {
@@ -117,6 +118,7 @@ function closeSnackBar() {
       <v-col>
         <v-card class="rounded-lg elevation-5">
           <v-form ref="form"
+          :readonly="readOnly"
           >
           <v-card-text>
             <v-row>
