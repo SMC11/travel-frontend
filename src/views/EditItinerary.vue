@@ -2,16 +2,20 @@
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ItineraryServices from "../services/ItineraryServices";
+import ItineraryDayServices from "../services/ItineraryDayServices";
+import ItineraryDayCard from "../components/ItineraryDayCardComponent.vue";
+
 
 const route = useRoute();
 const router = useRouter();
 const role = ref(0);
 const user = ref(null);
+const readOnly = ref(true);
 
 var itinerary = ref({});
 let isAddItinerary = ref(false);
 let isEditItinerary = ref(true);
-const itineraryDay = ref([]);
+const itineraryDays = ref([]);
 const site = ref([]);
 const hotel = ref([]);
 
@@ -24,30 +28,33 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
-    
+  mounted();
+});
+
+async function mounted(){
   await getItinerary();
-  // await getItineraryDays();
-  // await getItineraryDaySites();
-  // await getItineraryDayHotel();
-  // console.log(itinerary);
   if (user !== null) {
     itinerary.value.userId = user.id;
+    if(user.role > 0){
+      readOnly.value = false;
+    }
   }
-  console.log(itinerary.value);
-});
+}
 
 async function getItinerary() {
   await ItineraryServices.getItinerary(route.params.id)
     .then((response) => {
       itinerary.value = response.data[0];
+      itineraryDays.value = itinerary.value.itineraryDay;
     })
     .catch((error) => {
       console.log(error);
     });
 }
 
-function addItineraryDay(){
-  router.push({ name: "addItineraryDay" });
+async function addItineraryDay(){
+
+  router.push({ name: "addItineraryDay", params: {id: route.params.id} });
 }
 
 async function updateItinerary() {
@@ -84,6 +91,23 @@ async function addItinerary() {
   });
 }
 
+async function deleteItineraryDay(itineraryId, itineraryDayId) {
+  await ItineraryDayServices.deleteItineraryDay(itineraryId, itineraryDayId)
+  .then((response) => {
+      snackbar.value.value = true;
+      snackbar.value.color = "green";
+      snackbar.value.text = response.data.message;
+      mounted();
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.response.data.message;
+    });
+}
+
+
 function closeSnackBar() {
   snackbar.value.value = false;
 }
@@ -97,7 +121,7 @@ function closeSnackBar() {
     <v-row align="center">
       <v-col cols="10"
         ><v-card-title class="pl-0 text-h4 font-weight-bold"
-          >Edit Itinerary
+          >{{ readOnly?"View ":"Edit " }}  Itinerary
         </v-card-title>
       </v-col>
     </v-row>
@@ -105,6 +129,7 @@ function closeSnackBar() {
       <v-col>
         <v-card class="rounded-lg elevation-5">
           <v-form ref="form"
+          :readonly="readOnly"
           >
           <v-card-text>
             <v-row>
@@ -131,6 +156,17 @@ function closeSnackBar() {
                   label="Description"
                 ></v-textarea>
               </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+              <ItineraryDayCard
+                v-for="itineraryDay in itineraryDays"
+                :key="itineraryDay.id"
+                :itineraryDay="itineraryDay"
+                @delete-itinerary-day="deleteItineraryDay"
+              />
+              </v-col>
+              <v-col cols="6"></v-col>
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">

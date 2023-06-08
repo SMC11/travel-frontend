@@ -12,6 +12,7 @@ const router = useRouter();
 var hotel = ref({});
 let isAddHotel = ref(false);
 let isEditHotel = ref(true);
+let readOnly = ref(true);
 const hotelDay = ref([]);
 const site = ref([]);
 
@@ -31,6 +32,9 @@ onMounted(async () => {
   // console.log(hotel);
   if (user !== null) {
     hotel.value.userId = JSON.parse(user).id;
+    if(JSON.parse(user).role > 0){
+      readOnly.value = false;
+    }
   }
   console.log(hotel.value);
 });
@@ -70,12 +74,12 @@ function closeSnackBar() {
 
 <template>
   <v-container>
-    <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'home' }"> Back </v-btn>
+    <v-btn v-if="user !== null" class="mx-2" @click="router.go(-1)"> Back </v-btn>
     <br><br>
     <v-row align="center">
       <v-col cols="10"
         ><v-card-title class="pl-0 text-h4 font-weight-bold"
-          >Edit Hotel
+          >{{ readOnly?"View ":"Edit " }} Hotel
         </v-card-title>
       </v-col>
     </v-row>
@@ -83,6 +87,7 @@ function closeSnackBar() {
       <v-col>
         <v-card class="rounded-lg elevation-5">
             <v-form ref="form"
+            :readonly="readOnly"
           >
           <v-card-text>
             <v-row>
@@ -113,7 +118,7 @@ function closeSnackBar() {
           </v-card-text>
           <v-card-actions class="pt-0">
             
-            <v-btn 
+            <v-btn v-if="!readOnly"
             variant="flat" color="primary"
             @click="
               isAddHotel

@@ -29,13 +29,23 @@ const router = createRouter({
       component: () => import("./views/CreateHotel.vue"),
     },
     {
+      path: "/itinerary/:id",
+      name: "itinerary",
+      component: () => import("./views/Itinerary.vue"),
+    },
+    {
       path: "/edititinerary/:id",
       name: "edititinerary",
       component: () => import("./views/EditItinerary.vue"),
     },
     {
-      path: "/addItineraryDay/:id",
+      path: "/additineraryday/:id",
       name: "addItineraryDay",
+      component: () => import("./views/AddItineraryDay.vue"),
+    },
+    {
+      path: "/edititineraryday/:id/:itineraryDayId",
+      name: "editItineraryDay",
       component: () => import("./views/AddItineraryDay.vue"),
     },
     {
