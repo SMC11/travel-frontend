@@ -105,6 +105,7 @@ async function addSiteToItineraryDay(){
 
 async function addItineraryDay() {
   itineraryDay.value.hotel = selectedHotel.value;
+  itineraryDay.value.hotelId = selectedHotel.value.id;
   itineraryDay.value.itineraryId = route.params.id;
   await ItineraryDayServices.addItineraryDay(itinerary.value.id, itineraryDay.value)
     .then(() => {
@@ -123,6 +124,7 @@ async function addItineraryDay() {
 }
 async function updateItineraryDay() {
   itineraryDay.value.hotel = selectedHotel.value;
+  itineraryDay.value.hotelId = selectedHotel.value.id;
   itineraryDay.value.itineraryId = route.params.id;
   console.log(itineraryDay.value);
   await ItineraryDayServices.updateItineraryDay(itinerary.value.id, itineraryDay.value.id, itineraryDay.value)

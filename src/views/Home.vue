@@ -168,6 +168,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[1].value"
         :key="itinerary.id"
         :itinerary="itinerary"
+        @click="navigateToItinerary(itinerary.id)"
         @delete-itinerary="deleteItinerary"
       />
     </v-col>
@@ -177,6 +178,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[2].value"
         :key="itinerary.id"
         :itinerary="itinerary"
+        @click="navigateToItinerary(itinerary.id)"
         @delete-itinerary="deleteItinerary"
       />
     </v-col>
