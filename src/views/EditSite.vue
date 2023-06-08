@@ -12,6 +12,7 @@ const router = useRouter();
 var site = ref({});
 let isAddSite = ref(false);
 let isEditSite = ref(true);
+let readOnly = ref(true);
 
 const snackbar = ref({
   value: false,
@@ -31,6 +32,9 @@ onMounted(async () => {
   // console.log(site);
   if (user !== null) {
     site.value.userId = JSON.parse(user).id;
+    if(JSON.parse(user).role > 0){
+        readOnly.value = false;
+    }
   }
   console.log(site.value);
 });
@@ -70,12 +74,12 @@ function closeSnackBar() {
 
 <template>
   <v-container>
-    <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'home' }"> Back </v-btn>
+    <v-btn v-if="user !== null" class="mx-2" @click="router.go(-1)"> Back </v-btn>
     <br><br>
     <v-row align="center">
       <v-col cols="10"
         ><v-card-title class="pl-0 text-h4 font-weight-bold"
-          >Edit Site
+          >{{ readOnly?"View ":"Edit " }} Site
         </v-card-title>
       </v-col>
     </v-row>
@@ -83,6 +87,7 @@ function closeSnackBar() {
       <v-col>
         <v-card class="rounded-lg elevation-5">
             <v-form ref="form"
+            :readonly="readOnly"
           >
           <v-card-text>
             <v-row>
@@ -120,7 +125,7 @@ function closeSnackBar() {
           </v-card-text>
           <v-card-actions class="pt-0">
             
-            <v-btn 
+            <v-btn v-if="!readOnly"
             variant="flat" color="primary"
             @click="
               isAddSite

@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ItineraryServices from "../services/ItineraryServices";
+import ItineraryDayServices from "../services/ItineraryDayServices";
 import HotelServices from "../services/HotelServices";
 import SiteServices from "../services/SiteServices";
 
@@ -11,10 +12,12 @@ const role = ref(0);
 const user = ref(null);
 var itinerary = ref({});
 let isAddItinerary = ref(false);
-let isEditItinerary = ref(true);
+let isEditItineraryDay = ref(false);
 const selectedHotel = ref(undefined);
 const selectedSite = ref(undefined);
-const itineraryDay = ref([]);
+const itineraryDay = ref({
+    sites: []
+});
 const sites = ref([]);
 const itineraryDaySites = ref([]);
 const hotels = ref([]);
@@ -30,12 +33,12 @@ onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
 
   await getItinerary();
+  await getItineraryDay();
   await getSites();
   await getHotels();
   if (user !== null) {
     itinerary.value.userId = user.id;
   }
-  console.log(itinerary.value);
 });
 
 async function getItinerary() {
@@ -48,11 +51,34 @@ async function getItinerary() {
     });
 }
 
+async function getItineraryDay() {
+    if(route.params.itineraryDayId === undefined){
+        console.log("returning");
+      return;
+    }
+    isEditItineraryDay.value = true;
+    itineraryDaySites.value = [];
+    itineraryDay.value.sites = [];
+  await ItineraryDayServices.getItineraryDay(route.params.id, route.params.itineraryDayId)
+    .then((response) => {
+      itineraryDay.value = response.data[0];
+      itineraryDay.value.sites = [];
+      itineraryDay.value.dayOfEvent = getDate(itineraryDay.value.dayOfEvent);
+      selectedHotel.value = itineraryDay.value.hotel;
+      for(let i=0; i<itineraryDay.value.itineraryDayEvent.length; i++){
+        itineraryDaySites.value.push(itineraryDay.value.itineraryDayEvent[i].site);
+        itineraryDay.value.sites.push(itineraryDay.value.itineraryDayEvent[i].site);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 async function getHotels() {
   await HotelServices.getHotels()
     .then((response) => {
       hotels.value = response.data;
-      console.log(hotels);
     })
     .catch((error) => {
       console.log(error);
@@ -68,35 +94,24 @@ async function getSites() {
     });
 }
 
-function addItineraryDay(){
-  router.push({ name: "edititinerary", params: {id:route.params.id} });
-}
-
 async function addSiteToItineraryDay(){
+    if(selectedSite.value == undefined){
+        return null;
+    }
     itineraryDaySites.value.push(selectedSite.value);
-    console.log(itineraryDaySites);
-    // await ItineraryServices.updateItinerary(itinerary.value.id, itinerary.value)
-    // .then(() => {
-    //   snackbar.value.value = true;
-    //   snackbar.value.color = "green";
-    //   snackbar.value.text = `${itinerary.value.name} updated successfully!`;
-    //   setTimeout(()=> {router.push({ name: "home" });}, 5000);
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   snackbar.value.value = true;
-    //   snackbar.value.color = "error";
-    //   snackbar.value.text = error.response.data.message;
-    // });
+    itineraryDay.value.sites.push(selectedSite.value);
+    console.log(itineraryDay);
 }
 
-async function updateItinerary() {
-  await ItineraryServices.updateItinerary(itinerary.value.id, itinerary.value)
+async function addItineraryDay() {
+  itineraryDay.value.hotel = selectedHotel.value;
+  itineraryDay.value.itineraryId = route.params.id;
+  await ItineraryDayServices.addItineraryDay(itinerary.value.id, itineraryDay.value)
     .then(() => {
       snackbar.value.value = true;
       snackbar.value.color = "green";
-      snackbar.value.text = `${itinerary.value.name} updated successfully!`;
-      setTimeout(()=> {router.push({ name: "home" });}, 5000);
+      snackbar.value.text = `Itinerary Day added successfully!`;
+      setTimeout(()=> {router.push({ name: "edititinerary", params: {id:route.params.id} });}, 2000);
     })
     .catch((error) => {
       console.log(error);
@@ -104,24 +119,37 @@ async function updateItinerary() {
       snackbar.value.color = "error";
       snackbar.value.text = error.response.data.message;
     });
-  await getItinerary();
+  await getItineraryDay();
 }
-
-async function addItinerary() {
-  await ItineraryServices.addItinerary(itinerary.value).then(
-    () => {
+async function updateItineraryDay() {
+  itineraryDay.value.hotel = selectedHotel.value;
+  itineraryDay.value.itineraryId = route.params.id;
+  console.log(itineraryDay.value);
+  await ItineraryDayServices.updateItineraryDay(itinerary.value.id, itineraryDay.value.id, itineraryDay.value)
+    .then(() => {
       snackbar.value.value = true;
       snackbar.value.color = "green";
-      snackbar.value.text = `${itinerary.value.name} created successfully!`;
-      setTimeout(()=> {router.push({ name: "home" });}, 5000);
-    }
-  )
-  .catch((error) => {
-    console.log(error);
-    snackbar.value.value = true;
-    snackbar.value.color = "error";
-    snackbar.value.text = error.response.data.message;
-  });
+      snackbar.value.text = `Itinerary Day updated successfully!`;
+      setTimeout(()=> {router.push({ name: "edititinerary", params: {id:route.params.id} });}, 2000);
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.response.data.message;
+    });
+  await getItineraryDay();
+}
+
+function deleteSite(index){
+    itineraryDaySites.value.splice(index, 1);
+    itineraryDay.value.sites.splice(index, 1);
+}
+
+function getDate(date){
+    date = new Date(date);
+    return date.toISOString().split('T')[0];
+    return date.getFullYear()+"-"+date.getMonth() +"-"+date.getDate();
 }
 
 function closeSnackBar() {
@@ -179,7 +207,7 @@ function closeSnackBar() {
             <v-row>
                 <v-table>
                     <tbody>
-                <tr v-for="site in itineraryDaySites" :key="site.id">
+                <tr v-for="(site, index) in itineraryDaySites" :key="site.id">
                   <td><a :href=site.link>{{ site.name }}</a></td>
                   <td>{{ site.duration }}</td>
                   <td>{{ site.address }}</td>
@@ -194,7 +222,7 @@ function closeSnackBar() {
                     <v-icon
                       size="x-small"
                       icon="mdi-trash-can"
-                      @click="deleteSite(site)"
+                      @click="deleteSite(index)"
                     >
                     </v-icon>
                   </td>
@@ -228,10 +256,15 @@ function closeSnackBar() {
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">
-            <v-btn 
+            <v-btn v-if="!isEditItineraryDay"
             variant="flat" color="primary"
             @click="addItineraryDay()"
              >Add Day To Itinerary
+            </v-btn>
+            <v-btn v-if="isEditItineraryDay"
+            variant="flat" color="primary"
+            @click="updateItineraryDay()"
+             >Update Day In Itinerary
             </v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
