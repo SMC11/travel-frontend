@@ -96,7 +96,7 @@ function getHotelClick(hotelId){
         <v-list-item  v-for="itineraryDayEvent in itineraryDayEvents"
             :key="itineraryDayEvent.id">
             <v-row>
-              <v-col cols="6">
+              <v-col cols="4">
                 <a :href="itineraryDayEvent.site.link">
             <v-img
           :src="itineraryDayEvent.site.photo"
@@ -106,9 +106,19 @@ function getHotelClick(hotelId){
         ></v-img>
           </a>
       </v-col>
-      <v-col cols="6">
-          <a :href="getSiteClick(itineraryDayEvent.site.id)"> {{ itineraryDayEvent.site.name }},  {{ itineraryDayEvent.site.duration }} </a>
-            , <a :href="itineraryDayEvent.site.link"> Check it out</a>
+      <v-col cols="8">
+          <a class="text-wrap" v-if="role>0" :href="getSiteClick(itineraryDayEvent.site.id)"> {{ itineraryDayEvent.site.name }}
+            <br> {{ itineraryDayEvent.site.duration }} 
+            <br> Address: {{ itineraryDayEvent.site.address }} 
+            <br> Description: {{ itineraryDayEvent.site.description }} 
+          </a>
+          <div class="text-wrap" v-if="role == 0">
+            <b>Place: </b>{{ itineraryDayEvent.site.name }}
+           <br><b>Duration: </b> {{ itineraryDayEvent.site.duration }} 
+            <br><b>Address: </b> {{ itineraryDayEvent.site.address }} 
+            <br> <b>Description: </b>{{ itineraryDayEvent.site.description }} 
+          </div>
+            <br> <a :href="itineraryDayEvent.site.link"> Maps Link</a>
           </v-col>
           </v-row>            
           <br>
@@ -136,11 +146,18 @@ function getHotelClick(hotelId){
                 </a>
               </v-col>
               <v-col cols="6">
-                <a :href="getHotelClick(itineraryDay.hotel.id)">
-                  {{ itineraryDay.hotel.name }}, 
-                  {{ itineraryDay.hotel.address }}, 
-                  {{ itineraryDay.hotel.phone }}
+                <a class="text-wrap" v-if="role > 0" :href="getHotelClick(itineraryDay.hotel.id)">
+                  <b>Name: </b>{{ itineraryDay.hotel.name }}<br>
+                  <b>Address: </b>{{ itineraryDay.hotel.address }}<br>
+                  <b>Phone: </b>{{ itineraryDay.hotel.phone }}<br>
+                  <a :href="itineraryDay.hotel.link">Maps Link</a>
                 </a>
+                <div class="text-wrap" v-if="role == 0">
+                  <b>Name: </b>{{ itineraryDay.hotel.name }}<br>
+                  <b>Address: </b>{{ itineraryDay.hotel.address }}<br>
+                  <b>Phone: </b>{{ itineraryDay.hotel.phone }}<br>
+                  <a :href="itineraryDay.hotel.link">Maps Link</a>
+                </div>
               </v-col>
         </v-row>
       </v-card-title>

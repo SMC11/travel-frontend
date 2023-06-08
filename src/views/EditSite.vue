@@ -23,6 +23,9 @@ const snackbar = ref({
 
 onMounted(async () => {
   const user = localStorage.getItem("user");
+  if(user === null){
+    router.push({ name: "login" });
+  }
   console.log(JSON.parse(user).id);
     
   await getSite();
