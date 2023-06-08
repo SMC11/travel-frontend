@@ -37,7 +37,7 @@ async function mounted(){
   await getSubscriptions();
   if (user !== null) {
     itinerary.value.userId = user.id;
-    role.value = user.role;
+    role.value = user.value.role;
     if(user.role > 0){
       readOnly.value = false;
     }
