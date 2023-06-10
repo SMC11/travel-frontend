@@ -42,9 +42,9 @@ function getDescription(desc) {
 
 const emit = defineEmits(["delete-itinerary-day"]);
 
-const handleDelete = (itineraryDayId) => {
-  console.log(itineraryDayId);
-  emit("delete-itinerary-day", itineraryDayId);
+const handleDelete = (itineraryId, itineraryDayId) => {
+  console.log(itineraryId, itineraryDayId);
+  emit("delete-itinerary-day", itineraryId, itineraryDayId);
 };
 
 function navigateToEdit() {
@@ -52,7 +52,7 @@ function navigateToEdit() {
 }
 
 function getSiteClick(siteId){
-  return "/editsite/" + siteId;
+  router.push({ name: "editsite", params: { id: siteId } });
 }
 function getHotelClick(hotelId){
   return "/edithotel/" + hotelId;
@@ -107,11 +107,11 @@ function getHotelClick(hotelId){
           </a>
       </v-col>
       <v-col cols="8">
-          <a class="text-wrap" v-if="role>0" :href="getSiteClick(itineraryDayEvent.site.id)"> {{ itineraryDayEvent.site.name }}
+          <span style="cursor: pointer" class="text-wrap" v-if="role>0" @click="getSiteClick(itineraryDayEvent.site.id)"> {{ itineraryDayEvent.site.name }}
             <br> {{ itineraryDayEvent.site.duration }} 
             <br> Address: {{ itineraryDayEvent.site.address }} 
             <br> Description: {{ itineraryDayEvent.site.description }} 
-          </a>
+          </span>
           <div class="text-wrap" v-if="role == 0">
             <b>Place: </b>{{ itineraryDayEvent.site.name }}
            <br><b>Duration: </b> {{ itineraryDayEvent.site.duration }} 
