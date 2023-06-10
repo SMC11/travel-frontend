@@ -5,6 +5,7 @@ import ItineraryServices from "../services/ItineraryServices";
 import ItineraryDayServices from "../services/ItineraryDayServices";
 import ItineraryDayCard from "../components/ItineraryDayCardComponent.vue";
 import UserServices from "../services/UserServices";
+import EmailServices from "../services/EmailServices";
 
 
 const route = useRoute();
@@ -13,8 +14,10 @@ const role = ref(undefined);
 const user = ref(null);
 const readOnly = ref(true);
 
+const emailList = ref('');
 var itinerary = ref({});
 let isSubscribed = ref(false);
+const isSending = ref(false);
 const itineraryDays = ref([]);
 const userSubscriptions = ref([]);
 const site = ref([]);
@@ -96,6 +99,29 @@ async function getItinerary() {
       console.log(error);
     });
 }
+async function sendEmail() {
+  if(isSending.value){
+    return;
+  }
+  isSending.value = true;
+  var subject = "Itinerary for " + itinerary.value.name;
+  var href = new URL(router.currentRoute.value.href, window.location.origin).href;
+  var body = "Please check out this itinerary : " + href;
+  await EmailServices.sendEmail(emailList.value, subject, body)
+    .then((response) => {
+      snackbar.value.value = true;
+      snackbar.value.color = "green";
+      snackbar.value.text = "Emails Sent Successfully";
+      isSending.value = false;
+    })
+    .catch((error) => {
+      console.log(JSON.stringify(error));
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.text;
+      isSending.value = false;
+    });
+}
 
 
 
@@ -121,6 +147,42 @@ function closeSnackBar() {
     <v-row>
       <v-col>
         <v-card class="rounded-lg elevation-5">
+          <v-card-actions class="pt-0">
+            
+            <v-btn 
+            v-if="role == 0"
+            variant="flat" color="primary"
+            @click="
+              isSubscribed
+                ? unsubscribe()
+                : subscribe()
+            "
+             >
+             {{
+              isSubscribed
+                ? "Unsubscribe"
+                : "Subscribe"
+            }}
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-text-field
+                  v-model="emailList"
+                  label="Email List"
+                  placeholder="Comma separated list of emails"
+                  required
+                ></v-text-field>
+            <v-btn 
+            v-if="role == 0"
+            variant="flat" color="primary"
+            @click=" sendEmail()"
+             >
+             {{
+              isSending
+                ? "Sharing Itinerary..."
+                : "Share Itinerary"
+            }}
+            </v-btn>
+          </v-card-actions>
           <v-form ref="form"
           :readonly="readOnly"
           >
