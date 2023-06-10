@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import ItineraryCard from "../components/ItineraryCardComponent.vue";
 import ItineraryServices from "../services/ItineraryServices.js";
+import EmailServices from "../services/EmailServices";
 
 const router = useRouter();
 const itineraries = ref([]);
@@ -37,7 +38,8 @@ async function mounted(){
 
 async function getItineraries() {
   user.value = JSON.parse(localStorage.getItem("user"));
-  if (user.value !== null && user.value.id !== null && user.value.role > 0) {
+  console.log(user.value);
+  if (user.value !== null && user.value.role > 0) {
     await ItineraryServices.getItineraries()
       .then((response) => {
         itineraries.value = response.data;
@@ -68,7 +70,7 @@ async function getItineraries() {
         snackbar.value.text = error.response.data.message;
       });
   }
-  if (user.value !== null && user.value.id !== null && user.value.role == 0) {
+  if (user.value !== null && user.value.role == 0) {
     await ItineraryServices.getItinerariesByUserId(user.value.id)
       .then((response) => {
         for(let i = 0; i < response.data.length; i++){
@@ -87,6 +89,7 @@ async function getItineraries() {
 
 
 async function deleteItinerary(itineraryId) {
+  await sendEmail(itineraryId);
   await ItineraryServices.deleteItinerary(itineraryId)
   .then((response) => {
       snackbar.value.value = true;
@@ -100,6 +103,35 @@ async function deleteItinerary(itineraryId) {
       snackbar.value.color = "error";
       snackbar.value.text = error.response.data.message;
     });
+}
+async function sendEmail(itineraryId) {
+  await ItineraryServices.getItinerary(itineraryId)
+    .then((response) => {
+      var deletedItinerary = response.data[0];
+      var subscribers = deletedItinerary.subscription.map(sub => {return sub.user;});
+      var subscriberEmails = subscribers.map(user => {return user.email;});
+      var emailList = subscriberEmails.join(",");
+      var subject = "Deleted Itinerary for " + deletedItinerary.name;
+      var href = new URL(router.currentRoute.value.href, window.location.origin).href;
+      var body = "This itinerary is no longer available. Please check out our other available itineraries at : " + href;
+      EmailServices.sendEmail(emailList, subject, body)
+        .then((response) => {
+          snackbar.value.value = true;
+          snackbar.value.color = "green";
+          snackbar.value.text = "Emails Sent Successfully";
+          setTimeout(()=> {return;}, 2000);
+        })
+        .catch((error) => {
+          console.log(JSON.stringify(error));
+          snackbar.value.value = true;
+          snackbar.value.color = "error";
+          snackbar.value.text = error.text;
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  
 }
 
 function navigateToItinerary(itineraryId) {
@@ -163,7 +195,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[0].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
         @delete-itinerary="deleteItinerary"
       />
     </v-col>
@@ -173,7 +205,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[1].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
         @delete-itinerary="deleteItinerary"
       />
     </v-col>
@@ -183,7 +215,7 @@ function closeSnackBar() {
         v-for="itinerary in itinerariesList[2].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
         @delete-itinerary="deleteItinerary"
       />
     </v-col>
