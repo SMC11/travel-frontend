@@ -10,7 +10,8 @@ const router = createRouter({
           return {path: "/login"}
         }
         return JSON.parse(decodeURI(to.query.redirect));
-      }
+      },
+      name: "redirect",
     },
     {
       path: "/login",

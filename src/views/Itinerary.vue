@@ -114,7 +114,8 @@ async function sendEmail() {
   isSending.value = true;
   var subject = "Shared Itinerary for " + itinerary.value.name;
   var redirect = encodeURI(JSON.stringify({name: "itinerary", params: {id:itinerary.value.id}}));
-  var redirectRoute = "/?redirect=" + redirect;
+  var homeRoute = router.resolve({name: "redirect"}).href;
+  var redirectRoute = homeRoute + "/?redirect=" + redirect;
   var href = new URL(redirectRoute, window.location.origin).href;
   var body = "Please check out this itinerary : <a href=\""+href+"\">"+itinerary.value.name+"</a>";
   await EmailServices.sendEmail(emailList.value, subject, body)
