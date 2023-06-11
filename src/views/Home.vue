@@ -110,6 +110,9 @@ async function sendEmail(itineraryId) {
       var deletedItinerary = response.data[0];
       var subscribers = deletedItinerary.subscription.map(sub => {return sub.user;});
       var subscriberEmails = subscribers.map(user => {return user.email;});
+      if(subscriberEmails.length == 0){
+        return;
+      }
       var emailList = subscriberEmails.join(",");
       var subject = "Deleted Itinerary for " + deletedItinerary.name;
       var href = new URL(router.currentRoute.value.href, window.location.origin).href;
