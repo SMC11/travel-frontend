@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ItineraryServices from "../services/ItineraryServices";
+import EmailServices from "../services/EmailServices";
 import ItineraryDayServices from "../services/ItineraryDayServices";
 import ItineraryDayCard from "../components/ItineraryDayCardComponent.vue";
 
@@ -40,6 +41,8 @@ async function mounted(){
     itinerary.value.userId = user.id;
     if(user.value.role > 0){
       readOnly.value = false;
+    }else{
+      router.push({ name: "itinerary", params: {id: route.params.id} });
     }
   }
 }
@@ -63,6 +66,7 @@ async function addItineraryDay(){
 async function updateItinerary() {
   await ItineraryServices.updateItinerary(itinerary.value.id, itinerary.value)
     .then(() => {
+      sendEmail(itinerary.value.id);
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = `${itinerary.value.name} updated successfully!`;
@@ -75,6 +79,38 @@ async function updateItinerary() {
       snackbar.value.text = error.response.data.message;
     });
   await getItinerary();
+}
+async function sendEmail(itineraryId) {
+  await ItineraryServices.getItinerary(itineraryId)
+    .then((response) => {
+      var updatedItinerary = response.data[0];
+      var subscribers = updatedItinerary.subscription.map(sub => {return sub.user;});
+      var subscriberEmails = subscribers.map(user => {return user.email;});
+      if(subscriberEmails.length == 0){
+        return;
+      }
+      var emailList = subscriberEmails.join(",");
+      var subject = "Updated Itinerary for " + updatedItinerary.name;
+      var href = new URL(router.currentRoute.value.href, window.location.origin).href;
+      var body = "An itinerary you subscribed to has been updated. Please check out the changes made to it at : <a href=\""+href+"\">"+updatedItinerary.name+"</a>";
+      EmailServices.sendEmail(emailList, subject, body)
+        .then((response) => {
+          snackbar.value.value = true;
+          snackbar.value.color = "green";
+          snackbar.value.text = "Emails Sent Successfully";
+          setTimeout(()=> {return;}, 2000);
+        })
+        .catch((error) => {
+          console.log(JSON.stringify(error));
+          snackbar.value.value = true;
+          snackbar.value.color = "error";
+          snackbar.value.text = error.text;
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  
 }
 
 async function addItinerary() {
