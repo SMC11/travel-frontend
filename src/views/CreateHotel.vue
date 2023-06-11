@@ -105,7 +105,11 @@ async function addHotel() {
                 ></v-text-field>
                 <v-text-field
                   v-model="hotel.link"
-                  label="Maps Link"
+                  label="Hotel Link"
+                ></v-text-field>
+                <v-text-field
+                  v-model="hotel.maps"
+                  label="Hotel Maps Link"
                 ></v-text-field>
                 <v-text-field
                   v-model="hotel.photo"
