@@ -27,7 +27,8 @@ onMounted(async () => {
       firstName: "Guest",
       lastName: "User",
       email: "guest@localhost.com",
-      role: -1
+      role: -1,
+      userId: 0,
     };
     window.localStorage.setItem("user", JSON.stringify(userData));
     user.value = JSON.parse(localStorage.getItem("user"));
