@@ -150,19 +150,21 @@ function getHotelClick(hotelId){
                   <b>Name: </b>{{ itineraryDay.hotel.name }}<br>
                   <b>Address: </b>{{ itineraryDay.hotel.address }}<br>
                   <b>Phone: </b>{{ itineraryDay.hotel.phone }}<br>
-                  <a :href="itineraryDay.hotel.link">Maps Link</a>
+                  <a :href="itineraryDay.hotel.maps">Hotel Maps Link</a>
+
                 </a>
                 <div class="text-wrap" v-if="role == 0">
                   <b>Name: </b>{{ itineraryDay.hotel.name }}<br>
                   <b>Address: </b>{{ itineraryDay.hotel.address }}<br>
                   <b>Phone: </b>{{ itineraryDay.hotel.phone }}<br>
-                  <a :href="itineraryDay.hotel.link">Maps Link</a>
+                  <a :href="itineraryDay.hotel.maps">Hotel Maps Link</a>
+
                 </div>
               </v-col>
         </v-row>
       </v-card-title>
     </v-card>
-    
+     
   </v-card>
   <v-spacer></v-spacer>
 </template>
