@@ -5,11 +5,20 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      redirect: to => {
+        if(to.query.redirect == null){
+          return {path: "/login"}
+        }
+        return JSON.parse(decodeURI(to.query.redirect));
+      }
+    },
+    {
+      path: "/login",
       name: "login",
       component: () => import("./views/Login.vue"),
     },
     {
-      path: "/",
+      path: "/signup",
       name: "signup",
       component: () => import("./views/SignUp.vue"),
     },
