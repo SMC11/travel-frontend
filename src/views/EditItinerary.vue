@@ -93,8 +93,7 @@ async function sendEmail(itineraryId) {
       var emailList = subscriberEmails.join(",");
       var subject = "Updated Itinerary for " + updatedItinerary.name;
       var redirect = encodeURI(JSON.stringify({name: "itinerary", params: {id:itineraryId}}));
-      var homeRoute = router.resolve({name: "home"}).href;
-      var redirectRoute = homeRoute + "?redirect=" + redirect;
+      var redirectRoute = "/?redirect=" + redirect;
       var href = new URL(redirectRoute, window.location.origin).href;
       var body = "An itinerary you subscribed to has been updated. Please check out the changes made to it at : <a href=\""+href+"\">"+updatedItinerary.name+"</a>";
       EmailServices.sendEmail(emailList, subject, body)
