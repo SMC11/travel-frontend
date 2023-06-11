@@ -87,11 +87,15 @@ async function sendEmail(itineraryId) {
       var subscribers = updatedItinerary.subscription.map(sub => {return sub.user;});
       var subscriberEmails = subscribers.map(user => {return user.email;});
       if(subscriberEmails.length == 0){
+        console.log("No subscribers");
         return;
       }
       var emailList = subscriberEmails.join(",");
       var subject = "Updated Itinerary for " + updatedItinerary.name;
-      var href = new URL(router.currentRoute.value.href, window.location.origin).href;
+      var redirect = encodeURI(JSON.stringify({name: "itinerary", params: {id:itineraryId}}));
+      var homeRoute = router.resolve({name: "home"}).href;
+      var redirectRoute = homeRoute + "?redirect=" + redirect;
+      var href = new URL(redirectRoute, window.location.origin).href;
       var body = "An itinerary you subscribed to has been updated. Please check out the changes made to it at : <a href=\""+href+"\">"+updatedItinerary.name+"</a>";
       EmailServices.sendEmail(emailList, subject, body)
         .then((response) => {

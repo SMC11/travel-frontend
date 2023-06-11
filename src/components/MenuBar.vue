@@ -27,6 +27,12 @@ function logout() {
   user.value = null;
   router.push({ name: "login" });
 }
+
+function logoutGuest() {
+  localStorage.removeItem("user");
+  user.value = null;
+  router.push({ name: "login" });
+}
 </script>
 
 <template>
@@ -72,7 +78,8 @@ function logout() {
                 {{ user.email }}
               </p>
               <v-divider class="my-3"></v-divider>
-              <v-btn rounded variant="text" @click="logout()"> Logout </v-btn>
+              <v-btn v-if="user.role >= 0" rounded variant="text" @click="logout()"> Logout </v-btn>
+              <v-btn v-if="user.role < 0" rounded variant="text"  @click="logoutGuest()"> Login </v-btn>
             </div>
           </v-card-text>
         </v-card>

@@ -104,9 +104,12 @@ async function sendEmail() {
     return;
   }
   isSending.value = true;
-  var subject = "Itinerary for " + itinerary.value.name;
-  var href = new URL(router.currentRoute.value.href, window.location.origin).href;
-  var body = "Please check out this itinerary : " + href;
+  var subject = "Shared Itinerary for " + itinerary.value.name;
+  var redirect = encodeURI(JSON.stringify({name: "itinerary", params: {id:itinerary.value.id}}));
+  var homeRoute = router.resolve({name: "home"}).href;
+  var redirectRoute = homeRoute + "?redirect=" + redirect;
+  var href = new URL(redirectRoute, window.location.origin).href;
+  var body = "Please check out this itinerary : <a href=\""+href+"\">"+itinerary.value.name+"</a>";
   await EmailServices.sendEmail(emailList.value, subject, body)
     .then((response) => {
       snackbar.value.value = true;
@@ -135,7 +138,7 @@ function closeSnackBar() {
 
 <template>
   <v-container>
-    <v-btn v-if="user !== null" class="mx-2" @click="router.go(-1)"> Back </v-btn>
+    <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'home' }"> Back </v-btn>
     <br><br>
     <v-row align="center">
       <v-col cols="10"
@@ -147,10 +150,9 @@ function closeSnackBar() {
     <v-row>
       <v-col>
         <v-card class="rounded-lg elevation-5">
-          <v-card-actions class="pt-0">
+          <v-card-actions v-if="role == 0" class="pt-0">
             
             <v-btn 
-            v-if="role == 0"
             variant="flat" color="primary"
             @click="
               isSubscribed
@@ -172,7 +174,6 @@ function closeSnackBar() {
                   required
                 ></v-text-field>
             <v-btn 
-            v-if="role == 0"
             variant="flat" color="primary"
             @click=" sendEmail()"
              >

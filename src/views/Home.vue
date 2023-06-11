@@ -1,12 +1,13 @@
 <script setup>
 import { onMounted } from "vue";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import ItineraryCard from "../components/ItineraryCardComponent.vue";
 import ItineraryServices from "../services/ItineraryServices.js";
 import EmailServices from "../services/EmailServices";
 
 const router = useRouter();
+const route = useRoute();
 const itineraries = ref([]);
 const itinerariesList = [ref([]), ref([]), ref([])];
 const subscribedItinerariesList = [ref([]), ref([]), ref([])];
@@ -20,6 +21,22 @@ const snackbar = ref({
 });
 
 onMounted(async () => {
+  user.value = JSON.parse(localStorage.getItem("user"));
+  if(user.value == null){
+    let userData = {
+      firstName: "Guest",
+      lastName: "User",
+      email: "guest@localhost.com",
+      role: -1
+    };
+    window.localStorage.setItem("user", JSON.stringify(userData));
+    user.value = JSON.parse(localStorage.getItem("user"));
+  }
+  if(route.query.redirect !== undefined){
+    var redirectParams = JSON.parse(decodeURI(route.query.redirect));
+    console.log('Redirecting...');
+    router.push({name: redirectParams.name, params: redirectParams.params});
+  }
   mounted();
 });
 
@@ -243,7 +260,7 @@ function closeSnackBar() {
         v-for="itinerary in subscribedItinerariesList[0].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
       />
     </v-col>
     
@@ -252,7 +269,7 @@ function closeSnackBar() {
         v-for="itinerary in subscribedItinerariesList[1].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
       />
     </v-col>
     
@@ -261,7 +278,7 @@ function closeSnackBar() {
         v-for="itinerary in subscribedItinerariesList[2].value"
         :key="itinerary.id"
         :itinerary="itinerary"
-        @click="navigateToItinerary(itinerary.id)"
+        @dblclick="navigateToItinerary(itinerary.id)"
       />
     </v-col>
     </v-row>
