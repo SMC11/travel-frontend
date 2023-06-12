@@ -29,8 +29,16 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
-  if(user.value === null){
-    router.push({ name: "login" });
+  if(user.value == null){
+    let userData = {
+      firstName: "Guest",
+      lastName: "User",
+      email: "guest@localhost.com",
+      role: -1,
+      userId: 0,
+    };
+    window.localStorage.setItem("user", JSON.stringify(userData));
+    user.value = JSON.parse(localStorage.getItem("user"));
   }
   mounted();
 });
@@ -93,7 +101,8 @@ async function sendEmail(itineraryId) {
       var emailList = subscriberEmails.join(",");
       var subject = "Updated Itinerary for " + updatedItinerary.name;
       var redirect = encodeURI(JSON.stringify({name: "itinerary", params: {id:itineraryId}}));
-      var homeRoute = router.resolve({path: "redirect"}).href;
+      var homeRoute = router.resolve({name: "redirect"}).href;
+      console.log(homeRoute);
       var redirectRoute = homeRoute + "?redirect=" + redirect;
       var href = new URL(redirectRoute, window.location.origin).href;
       var body = "An itinerary you subscribed to has been updated. Please check out the changes made to it at : <a href=\""+href+"\">"+updatedItinerary.name+"</a>";
