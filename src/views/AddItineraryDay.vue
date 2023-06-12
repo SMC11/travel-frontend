@@ -216,13 +216,7 @@ function closeSnackBar() {
                   <td><a :href=site.link>{{ site.name }}</a></td>
                   <td>{{ site.duration }}</td>
                   <td>{{ site.address }}</td>
-                  <td>
-                    <v-icon
-                      size="x-small"
-                      icon="mdi-pencil"
-                      @click="openEditSite(site)"
-                    ></v-icon>
-                  </td>
+                  <td></td>
                   <td>
                     <v-icon
                       size="x-small"

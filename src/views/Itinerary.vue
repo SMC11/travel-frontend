@@ -32,8 +32,16 @@ const snackbar = ref({
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
-  if(user.value === null){
-    router.push({ name: "login" });
+  if(user.value == null){
+    let userData = {
+      firstName: "Guest",
+      lastName: "User",
+      email: "guest@localhost.com",
+      role: -1,
+      userId: 0,
+    };
+    window.localStorage.setItem("user", JSON.stringify(userData));
+    user.value = JSON.parse(localStorage.getItem("user"));
   }
   mounted();
 });
