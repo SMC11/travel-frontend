@@ -16,6 +16,71 @@ const snackbar = ref({
   text: "",
 });
 
+const rules = ref(({
+      valid: false,
+      nameRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 256) return true
+
+          return 'Value must be less than 256 characters.'
+        },
+      ],
+      durationRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 15) return true
+
+          return 'Value must be less than 15 characters.'
+        },
+      ],
+      addressRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 2048) return true
+
+          return 'Value must be less than 2048 characters.'
+        },
+      ],
+      mapsRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 2048) return true
+
+          return 'Value must be less than 2048 characters.'
+        },
+      ],
+      photoRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 2048) return true
+
+          return 'Value must be less than 2048 characters.'
+        },
+      ],
+      }
+));
+
 
 onMounted(async () => {
   const user = localStorage.getItem("user");
@@ -86,7 +151,7 @@ async function addSite() {
     <v-row>
       <v-col>
         <v-card class="rounded-lg elevation-5">
-          <v-form ref="form"
+          <v-form v-model="rules.valid">
           >
           <v-card-text>
             <v-row>
@@ -94,23 +159,28 @@ async function addSite() {
                 <v-text-field
                   v-model="site.name"
                   label="Name"
+                  :rules="rules.nameRules"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-model="site.duration"
                   label="Duration"
+                  :rules="rules.durationRules"
                 ></v-text-field>
                 <v-text-field
                   v-model="site.address"
                   label="Address"
+                  :rules="rules.addressRules"
                 ></v-text-field>
                 <v-text-field
                   v-model="site.link"
                   label="Maps Link"
+                  :rules="rules.mapsRules"
                 ></v-text-field>
                 <v-text-field
                   v-model="site.photo"
                   label="Photo Link"
+                  :rules="rules.photoRules"
                 ></v-text-field>
               </v-col>
               <v-col>
