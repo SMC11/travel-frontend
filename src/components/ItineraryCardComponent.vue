@@ -5,8 +5,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const showDetails = ref(false);
-const recipeIngredients = ref([]);
-const recipeSteps = ref([]);
 const user = ref(null);
 const role = ref(0);
 
