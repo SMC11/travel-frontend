@@ -26,6 +26,46 @@ const snackbar = ref({
   text: "",
 });
 
+const rules = ref(({
+      valid: false,
+      nameRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 256) return true
+
+          return 'Value must be less than 256 characters.'
+        },
+      ],
+      durationRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value <= 100) return true
+
+          return 'Value must be less than 100.'
+        },
+      ],
+      durationtypeRules: [
+        value => {
+          if (value) return true
+
+          return 'Value is required.'
+        },
+        value => {
+          if (value?.length <= 5) return true
+
+          return 'Value must be less than 5 characters.'
+        },
+      ],
+}
+));
 
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
@@ -180,7 +220,7 @@ function closeSnackBar() {
     <v-row>
       <v-col>
         <v-card class="rounded-lg elevation-5">
-          <v-form ref="form"
+          <v-form v-model="rules.valid">
           :readonly="readOnly"
           >
           <v-card-text>
@@ -189,16 +229,19 @@ function closeSnackBar() {
                 <v-text-field
                   v-model="itinerary.name"
                   label="Name"
+                  :rules="rules.nameRules"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-model.number="itinerary.duration"
                   label="Duration"
                   type="number"
+                  :rules="rules.durationRules"
                 ></v-text-field>
                 <v-text-field
                   v-model.number="itinerary.durationType"
                   label="Duration Type (M - Months/ d - days/ h - hours)"
+                  :rules="rules.durationtypeRules"
                 ></v-text-field>
               </v-col>
               <v-col>
